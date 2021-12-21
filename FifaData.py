@@ -1,3 +1,4 @@
+#IMPORTS
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -5,54 +6,68 @@ import matplotlib.pyplot as plt
 import eli5
 from eli5.sklearn import PermutationImportance
 from collections import Counter
+import missingno as msno
+
 import warnings
 warnings.filterwarnings('ignore')
+import plotly
+sns.set_style('darkgrid')
 
 df=pd.read_csv(r'C:\Users\Ciara\PycharmProjects\pythonProject1\data.csv')
-
-df.head().T
-
+print('\n')
+print('\n')
+print('_____________________________________\n\n')
+df.head()
+print('\n')
+print('\n')
+print('_____________________________________\n\n')
 df.columns
-
+print('\n')
+print('\n')
+print('_____________________________________\n\n')
 df.info()
-
-df.describe().T
-
+print('\n')
+print('\n')
+print('_____________________________________\n\n')
+df.describe()
+print('\n')
+print('\n')
+print('_____________________________________\n\n')
 df.drop(['Unnamed: 0','Photo','Flag','Club Logo'],axis=1,inplace=True)
-
-
+print('\n')
+print('\n')
+print('_____________________________________\n\n')
 df.isnull().sum()
-
+print('\n')
+print('\n')
+print('_____________________________________\n\n')
 missing_height = df[df['Height'].isnull()].index.tolist()
 missing_weight = df[df['Weight'].isnull()].index.tolist()
 if missing_height == missing_weight:
-    print('They are same')
+    print('SAME')
 else:
-    print('They are different')
+    print('DIFFERENT')
 
 df.drop(df.index[missing_height], inplace=True)
-
 df.isnull().sum()
-
 df.drop(['Loaned From','Release Clause','Joined'],axis=1,inplace=True)
-
-
-print('Total number of countries : {0}'.format(df['Nationality'].nunique()))
+print('\n')
+print('\n')
+print('_____________________________________\n\n')
+print('TOTAL NUMBER OF COUNTRIES WITHIN DATASET: {0}'.format(df['Nationality'].nunique()))
 print(df['Nationality'].value_counts().head(5))
 print('--'*40)
-print("\nEuropean Countries have most players")
-
-
-
-print('Total number of clubs : {0}'.format(df['Club'].nunique()))
+print('_____________________________________\n\n')
+print('TOTAL NUMBER OF CLUBS WITHIN DATASET: {0}'.format(df['Club'].nunique()))
 print(df['Club'].value_counts().head(5))
-
-
-
-print('Maximum Potential : '+str(df.loc[df['Potential'].idxmax()][1]))
-print('Maximum Overall Perforamnce : '+str(df.loc[df['Overall'].idxmax()][1]))
-
-
+print('\n')
+print('\n')
+print('_____________________________________\n\n')
+print('PLAYER WITH THE MOST POTENTIAL: '+str(df.loc[df['Potential'].idxmax()][1]))
+print('PLAYER WITH BEST OVERALL PREFORMANCE : '+str(df.loc[df['Overall'].idxmax()][1]))
+print('\n')
+print('\n')
+print('_____________________________________\n\n')
 pr_cols=['Crossing', 'Finishing', 'HeadingAccuracy', 'ShortPassing', 'Volleys',
        'Dribbling', 'Curve', 'FKAccuracy', 'LongPassing', 'BallControl',
        'Acceleration', 'SprintSpeed', 'Agility', 'Reactions', 'Balance',
@@ -60,14 +75,15 @@ pr_cols=['Crossing', 'Finishing', 'HeadingAccuracy', 'ShortPassing', 'Volleys',
        'Aggression', 'Interceptions', 'Positioning', 'Vision', 'Penalties',
        'Composure', 'Marking', 'StandingTackle', 'SlidingTackle', 'GKDiving',
        'GKHandling', 'GKKicking', 'GKPositioning', 'GKReflexes']
-print('BEST IN DIFFERENT ASPECTS :')
-print('_________________________\n\n')
+
+print('\n')
+print('\n')
+print('BEST PLAYER PER STAT:')
+print('_____________________________________\n\n')
 i=0
 while i < len(pr_cols):
     print('Best {0} : {1}'.format(pr_cols[i],df.loc[df[pr_cols[i]].idxmax()][1]))
     i += 1
-
-
 
 def value_to_int(df_value):
     try:
@@ -118,6 +134,7 @@ for position_name, features in df.groupby(df['Position'])[player_features].mean(
 
     ax = plt.subplot(10, 3, idx, polar=True)
 
+
     plt.xticks(angles[:-1], categories, color='grey', size=8)
 
     ax.set_rlabel_position(0)
@@ -137,4 +154,5 @@ sns.lmplot(x='BallControl', y='Dribbling', data=df, col='Preferred Foot',
            line_kws={'color': 'red'})
 
 plt.show()
+plt.close()
 
